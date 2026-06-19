@@ -27,8 +27,18 @@ React (Vite) ──fetch/JSON──▶ FastAPI gateway ──gRPC──▶ TaskS
 - Python 3.12+ (`python3 --version`)
 - Node.js v22+ (`node --version`)
 - pnpm (`npm install -g pnpm && pnpm --version`)
-- moon (`curl -fsSL https://moonrepo.dev/install/moon.sh | bash && moon --version`)
+- moon v2+ (`npm install -g @moonrepo/cli && moon --version`, or the install
+  script at https://moonrepo.dev/docs/install)
 - Git
+
+> **Note on moon's toolchain system:** `.moon/toolchains.yml` is deliberately
+> left minimal. moon v2 can manage tool versions itself (Node, pnpm, Python,
+> etc.) via downloadable WASM plugins, but that requires network access to
+> `ghcr.io`. This repo instead assumes Python/Node/pnpm are already installed
+> and on your `PATH` (per the prerequisites above), and JS tasks invoke `pnpm
+> exec <tool>` so binaries resolve from the local workspace without moon's
+> toolchain plugins. If you'd rather have moon manage versions for you, see
+> https://moonrepo.dev/docs/config/toolchains.
 
 ## First-time setup
 

@@ -2,16 +2,17 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
 language: 'python'
-type: 'application'
+layer: 'application'
 
 tasks:
   install:
-    command: 'pip install -r requirements.txt'
+    command: 'pip'
+    args: ['install', '-r', 'requirements.txt']
     inputs:
       - 'requirements.txt'
 
   gen-proto:
-    command: 'python -m grpc_tools.protoc -I app/proto --python_out=app/proto --grpc_python_out=app/proto app/proto/task.proto && sed -i.bak "s/^import task_pb2/from . import task_pb2/" app/proto/task_pb2_grpc.py && rm -f app/proto/task_pb2_grpc.py.bak'
+    script: 'python -m grpc_tools.protoc -I app/proto --python_out=app/proto --grpc_python_out=app/proto app/proto/task.proto && sed -i.bak "s/^import task_pb2/from . import task_pb2/" app/proto/task_pb2_grpc.py && rm -f app/proto/task_pb2_grpc.py.bak'
     inputs:
       - 'app/proto/task.proto'
     outputs:
@@ -21,21 +22,25 @@ tasks:
       - '~:install'
 
   dev:
-    command: 'python -m app.server'
-    local: true
+    command: 'python'
+    args: ['-m', 'app.server']
+    preset: 'server'
     deps:
       - '~:gen-proto'
 
   dev-gateway:
-    command: 'uvicorn app.gateway:app --reload --port 8000'
-    local: true
+    command: 'uvicorn'
+    args: ['app.gateway:app', '--reload', '--port', '8000']
+    preset: 'server'
     deps:
       - '~:gen-proto'
 
   test:
-    command: 'pytest -q'
+    command: 'pytest'
+    args: ['-q']
     deps:
       - '~:gen-proto'
 
   lint:
-    command: 'ruff check app'
+    command: 'ruff'
+    args: ['check', 'app']

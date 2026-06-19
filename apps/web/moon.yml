@@ -2,15 +2,16 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
 language: 'typescript'
-type: 'application'
+layer: 'application'
 
 tasks:
   dev:
-    command: 'vite'
-    local: true
+    command: 'pnpm'
+    args: ['exec', 'vite']
+    preset: 'server'
 
   build:
-    command: 'tsc -b && vite build'
+    script: 'pnpm exec tsc -b && pnpm exec vite build'
     inputs:
       - 'src/**/*'
       - 'index.html'
@@ -20,9 +21,11 @@ tasks:
       - 'dist'
 
   test:
-    command: 'vitest run'
+    command: 'pnpm'
+    args: ['exec', 'vitest', 'run']
     inputs:
       - 'src/**/*'
 
   lint:
-    command: 'eslint .'
+    command: 'pnpm'
+    args: ['exec', 'eslint', '.']

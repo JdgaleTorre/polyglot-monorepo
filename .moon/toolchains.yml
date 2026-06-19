@@ -1,0 +1,11 @@
+# https://moonrepo.dev/docs/config/toolchains
+#
+# Deliberately minimal: this repo relies on Python/Node/pnpm already being
+# installed on your PATH (see the Prerequisites section in README.md),
+# rather than letting moon manage toolchain versions itself. Declaring
+# specific toolchains (node, pnpm, unstable_python, etc.) makes moon
+# download WASM plugins from ghcr.io on first run, which adds a dependency
+# this practice repo doesn't need. If you want moon to manage tool versions
+# for you, see https://moonrepo.dev/docs/config/toolchains and add the
+# relevant blocks back in.
+$schema: 'https://moonrepo.dev/schemas/toolchains.json'
