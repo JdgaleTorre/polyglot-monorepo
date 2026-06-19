@@ -58,4 +58,19 @@ describe('App', () => {
 
     expect(await screen.findByText('Network down')).toBeInTheDocument();
   });
+
+  it('deletes a task', async () => {
+    vi.mocked(api.deleteTask).mockResolvedValue(undefined);
+
+    render(<App />);
+    await screen.findByText('Existing task');
+
+    const user = userEvent.setup();
+    const deleteButtons = await screen.findAllByText('Delete');
+    await user.click(deleteButtons[0]);
+
+    await waitFor(() =>
+      expect(screen.queryByText('Existing task')).not.toBeInTheDocument(),
+    );
+  });
 });

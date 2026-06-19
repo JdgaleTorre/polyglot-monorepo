@@ -1,4 +1,5 @@
 import grpc
+from google.protobuf import empty_pb2
 
 from app.models.task import SessionLocal, TaskModel
 from app.proto import task_pb2, task_pb2_grpc
@@ -43,5 +44,19 @@ class TaskServiceServicer(task_pb2_grpc.TaskServiceServicer):
             db.commit()
             db.refresh(task)
             return _to_proto(task)
+        finally:
+            db.close()
+
+    def DeleteTask(
+        self, request: task_pb2.DeleteTaskRequest, context: grpc.ServicerContext
+    ) -> empty_pb2.Empty:
+        db = SessionLocal()
+        try:
+            task = db.query(TaskModel).filter(TaskModel.id == request.id).first()
+            if task is None:
+                context.abort(grpc.StatusCode.NOT_FOUND, f"task {request.id} not found")
+            db.delete(task)
+            db.commit()
+            return empty_pb2.Empty()
         finally:
             db.close()

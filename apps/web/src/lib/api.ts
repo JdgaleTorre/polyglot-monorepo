@@ -38,3 +38,13 @@ export async function completeTask(id: number): Promise<Task> {
   }
   return res.json();
 }
+
+export async function deleteTask(id: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { detail?: string } | null;
+    throw new Error(body?.detail ?? `Failed to delete task: ${res.status}`);
+  }
+}

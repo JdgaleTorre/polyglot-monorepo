@@ -11,7 +11,7 @@ real gRPC service underneath — the React client only ever talks JSON.
 """
 
 import grpc
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -65,3 +65,13 @@ def complete_task(task_id: int):
     except grpc.RpcError as e:
         raise HTTPException(status_code=404, detail=e.details())
     return _task_to_dict(task)
+
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int):
+    stub = get_stub()
+    try:
+        stub.DeleteTask(task_pb2.DeleteTaskRequest(id=task_id))
+    except grpc.RpcError as e:
+        raise HTTPException(status_code=404, detail=e.details())
+    return Response(status_code=204)

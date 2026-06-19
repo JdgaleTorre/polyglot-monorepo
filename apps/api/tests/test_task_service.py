@@ -63,3 +63,19 @@ def test_complete_task_missing_id_raises_not_found():
     servicer = TaskServiceServicer()
     with pytest.raises(RuntimeError, match="NOT_FOUND"):
         servicer.CompleteTask(task_pb2.CompleteTaskRequest(id=9999), FakeContext())
+
+
+def test_delete_task_removes_task():
+    servicer = TaskServiceServicer()
+    created = servicer.CreateTask(task_pb2.CreateTaskRequest(title="Delete me"), FakeContext())
+
+    servicer.DeleteTask(task_pb2.DeleteTaskRequest(id=created.id), FakeContext())
+
+    response = servicer.ListTasks(task_pb2.ListTasksRequest(), FakeContext())
+    assert len(response.tasks) == 0
+
+
+def test_delete_task_missing_id_raises_not_found():
+    servicer = TaskServiceServicer()
+    with pytest.raises(RuntimeError, match="NOT_FOUND"):
+        servicer.DeleteTask(task_pb2.DeleteTaskRequest(id=9999), FakeContext())

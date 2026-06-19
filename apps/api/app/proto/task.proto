@@ -2,10 +2,13 @@ syntax = "proto3";
 
 package task;
 
+import "google/protobuf/empty.proto";
+
 service TaskService {
   rpc CreateTask (CreateTaskRequest) returns (Task);
   rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
   rpc CompleteTask (CompleteTaskRequest) returns (Task);
+  rpc DeleteTask (DeleteTaskRequest) returns (google.protobuf.Empty);
 }
 
 message Task {
@@ -25,5 +28,9 @@ message ListTasksResponse {
 }
 
 message CompleteTaskRequest {
+  int32 id = 1;
+}
+
+message DeleteTaskRequest {
   int32 id = 1;
 }
