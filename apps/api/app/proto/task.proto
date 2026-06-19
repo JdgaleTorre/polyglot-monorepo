@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package task;
+
+service TaskService {
+  rpc CreateTask (CreateTaskRequest) returns (Task);
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+  rpc CompleteTask (CompleteTaskRequest) returns (Task);
+}
+
+message Task {
+  int32 id = 1;
+  string title = 2;
+  bool completed = 3;
+}
+
+message CreateTaskRequest {
+  string title = 1;
+}
+
+message ListTasksRequest {}
+
+message ListTasksResponse {
+  repeated Task tasks = 1;
+}
+
+message CompleteTaskRequest {
+  int32 id = 1;
+}

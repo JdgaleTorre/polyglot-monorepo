@@ -1,0 +1,41 @@
+# https://moonrepo.dev/docs/config/project
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+language: 'python'
+type: 'application'
+
+tasks:
+  install:
+    command: 'pip install -r requirements.txt'
+    inputs:
+      - 'requirements.txt'
+
+  gen-proto:
+    command: 'python -m grpc_tools.protoc -I app/proto --python_out=app/proto --grpc_python_out=app/proto app/proto/task.proto && sed -i.bak "s/^import task_pb2/from . import task_pb2/" app/proto/task_pb2_grpc.py && rm -f app/proto/task_pb2_grpc.py.bak'
+    inputs:
+      - 'app/proto/task.proto'
+    outputs:
+      - 'app/proto/task_pb2.py'
+      - 'app/proto/task_pb2_grpc.py'
+    deps:
+      - '~:install'
+
+  dev:
+    command: 'python -m app.server'
+    local: true
+    deps:
+      - '~:gen-proto'
+
+  dev-gateway:
+    command: 'uvicorn app.gateway:app --reload --port 8000'
+    local: true
+    deps:
+      - '~:gen-proto'
+
+  test:
+    command: 'pytest -q'
+    deps:
+      - '~:gen-proto'
+
+  lint:
+    command: 'ruff check app'

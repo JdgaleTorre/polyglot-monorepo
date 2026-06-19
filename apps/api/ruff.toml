@@ -1,0 +1,5 @@
+extend-exclude = ["app/proto/*_pb2.py", "app/proto/*_pb2_grpc.py"]
+line-length = 120
+
+[lint]
+select = ["E", "F", "I"]

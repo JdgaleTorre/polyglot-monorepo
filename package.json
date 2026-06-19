@@ -1,0 +1,8 @@
+{
+  "name": "polyglot-monorepo",
+  "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

@@ -1,0 +1,28 @@
+# https://moonrepo.dev/docs/config/project
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+language: 'typescript'
+type: 'application'
+
+tasks:
+  dev:
+    command: 'vite'
+    local: true
+
+  build:
+    command: 'tsc -b && vite build'
+    inputs:
+      - 'src/**/*'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
+    outputs:
+      - 'dist'
+
+  test:
+    command: 'vitest run'
+    inputs:
+      - 'src/**/*'
+
+  lint:
+    command: 'eslint .'
